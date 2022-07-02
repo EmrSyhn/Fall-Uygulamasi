@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_string_interpolations
+// ignore_for_file: unnecessary_string_interpolations, unnecessary_null_comparison
 
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: [
               Container(
                 margin: const EdgeInsets.all(15),
                 padding: const EdgeInsets.all(15),
@@ -51,14 +51,19 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 146, 70, 72),
         onPressed: yazGetir,
-        tooltip: 'Rastgele Fal',
         child: const Icon(Icons.done_all),
       ),
     );
   }
 
   yazGetir() {
-    FirebaseFirestore.instance.collection('Yazilar').doc('3').get().then(
+    // String herhangibirsayi = '';
+    // int sayi = 0;
+    // if (sayi == 0) {
+    //   sayi++;
+    // }
+    // String sayicik = '$sayi';
+    FirebaseFirestore.instance.collection('Yazilar').doc('1').get().then(
       (gelenVeri) {
         setState(
           () {
