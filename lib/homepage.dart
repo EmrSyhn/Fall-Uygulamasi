@@ -57,13 +57,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   yazGetir() {
-    // String herhangibirsayi = '';
-    // int sayi = 0;
-    // if (sayi == 0) {
-    //   sayi++;
-    // }
-    // String sayicik = '$sayi';
-    FirebaseFirestore.instance.collection('Yazilar').doc('1').get().then(
+    FirebaseFirestore.instance.collection('Yazilar').doc('3').get().then(
       (gelenVeri) {
         setState(
           () {
