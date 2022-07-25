@@ -25,32 +25,40 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                margin: const EdgeInsets.all(15),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.0),
+              InkWell(
+                onTap: yazGetir,
+                child: Container(
+                  margin: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  width: 300,
+                  child: Text(
+                    gelenYaziIcerigi,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
-                width: 300,
-                child: Column(
-                  children: [
-                    Text(
-                      gelenYaziIcerigi,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: yazGetir,
+                child: Container(
+                  margin: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: const Icon(Icons.done_all),
                 ),
               ),
             ],
           ),
         ),
-      ),
-      //button
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color.fromARGB(255, 146, 70, 72),
-        onPressed: yazGetir,
-        child: const Icon(Icons.done_all),
       ),
     );
   }
