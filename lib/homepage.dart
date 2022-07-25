@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_string_interpolations, unnecessary_null_comparison
-
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +32,11 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20.0),
                 ),
+                width: 300,
                 child: Column(
                   children: [
                     Text(
-                      '$gelenYaziIcerigi',
+                      gelenYaziIcerigi,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -57,11 +56,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   yazGetir() {
-    FirebaseFirestore.instance.collection('Yazilar').doc('3').get().then(
+    FirebaseFirestore.instance.collection('Yazilar').doc('1').get().then(
       (gelenVeri) {
         setState(
           () {
-            gelenYaziIcerigi = gelenVeri.data()?['icerik'];
+            gelenYaziIcerigi = gelenVeri.data()!['icerik'];
           },
         );
       },
