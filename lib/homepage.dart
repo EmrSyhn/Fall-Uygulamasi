@@ -14,7 +14,7 @@ Random random = Random();
 int randomNumber = random.nextInt(4);
 String stringValue = random.toString();
 
-var gelenYaziIcerigi = "";
+var gelenYaziIcerigi = "Butona tıklayınız";
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -55,12 +55,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  yazGetir() {
-    FirebaseFirestore.instance.collection('Yazilar').doc('1').get().then(
+  yazGetir() async {
+    var doc = await FirebaseFirestore.instance
+        .collection('Yazılar')
+        .orderBy('index', descending: true)
+        .limit(1)
+        .get();
+    int maxIndex = doc.docs.first['index'] ?? 0;
+
+    FirebaseFirestore.instance
+        .collection('Yazılar')
+        .doc('${Random().nextInt(maxIndex + 1)}')
+        .get()
+        .then(
       (gelenVeri) {
         setState(
           () {
-            gelenYaziIcerigi = gelenVeri.data()!['icerik'];
+            gelenYaziIcerigi = gelenVeri.data()?['icerik'];
           },
         );
       },
