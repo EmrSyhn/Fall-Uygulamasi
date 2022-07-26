@@ -11,10 +11,11 @@ class HomePage extends StatefulWidget {
 }
 
 var gelenYaziIcerigi = "Butona tıklayınız";
-int sayac = 12000;
-double saat = sayac / 200;
-int i = saat.toInt();
 final CountDownController _controller = CountDownController();
+
+int sayac = 43200;
+int sayac2 = 590;
+bool isButtonActive = true;
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -25,41 +26,16 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularCountDownTimer(
-                duration: i,
-                initialDuration: 0,
-                controller: _controller,
-                width: MediaQuery.of(context).size.width * 0.4,
-                height: MediaQuery.of(context).size.height * 0.2,
-                ringColor: const Color.fromARGB(255, 58, 25, 123),
-                ringGradient: null,
-                fillColor: Colors.green[100]!,
-                fillGradient: null,
-                backgroundColor: const Color.fromARGB(255, 105, 59, 3),
-                backgroundGradient: null,
-                strokeWidth: 5.0,
-                strokeCap: StrokeCap.round,
-                textStyle: const TextStyle(
-                    fontSize: 33.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-                textFormat: CountdownTextFormat.S,
-                isReverse: true,
-                isReverseAnimation: true,
-                isTimerTextShown: true,
-                autoStart: false,
-                onStart: () {
-                  debugPrint('Countdown Started');
-                },
-                onComplete: () {
-                  debugPrint('Countdown Ended');
-                },
-                onChange: (String timeStamp) {
-                  debugPrint('Countdown Changed $timeStamp');
-                },
-              ),
+              const Sayac(),
+              //ElevatedButton(onPressed: yazGetir, child: const Text('deneme')),
               InkWell(
-                onTap: yazGetir,
+                onTap: () {
+                  if (isButtonActive) {
+                    isButtonActive = false;
+                    //....
+                    yazGetir();
+                  }
+                },
                 child: Container(
                   margin: const EdgeInsets.all(15),
                   padding: const EdgeInsets.all(15),
@@ -78,7 +54,13 @@ class _HomePageState extends State<HomePage> {
                 height: 10,
               ),
               InkWell(
-                onTap: yazGetir,
+                onTap: () {
+                  if (isButtonActive) {
+                    isButtonActive = false;
+                    //....
+                    yazGetir();
+                  }
+                },
                 child: Container(
                   margin: const EdgeInsets.all(15),
                   padding: const EdgeInsets.all(15),
@@ -91,21 +73,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _button({required String title, VoidCallback? onPressed}) {
-    return Expanded(
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.purple),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          title,
-          style: const TextStyle(color: Colors.white),
         ),
       ),
     );
@@ -131,5 +98,47 @@ class _HomePageState extends State<HomePage> {
       );
     });
     _controller.start();
+  }
+}
+
+class Sayac extends StatelessWidget {
+  const Sayac({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CircularCountDownTimer(
+      duration: sayac2,
+      initialDuration: 0,
+      controller: _controller,
+      width: MediaQuery.of(context).size.width * 0.5,
+      height: MediaQuery.of(context).size.height * 0.2,
+      ringColor: const Color.fromARGB(255, 58, 25, 123),
+      ringGradient: null,
+      fillColor: Colors.green[100]!,
+      fillGradient: null,
+      backgroundColor: const Color.fromARGB(255, 105, 59, 3),
+      backgroundGradient: null,
+      strokeWidth: 5.0,
+      strokeCap: StrokeCap.round,
+      textStyle: const TextStyle(
+          fontSize: 33.0, color: Colors.white, fontWeight: FontWeight.bold),
+      textFormat: CountdownTextFormat.HH_MM_SS,
+      isReverse: true,
+      isReverseAnimation: true,
+      isTimerTextShown: true,
+      autoStart: false,
+      onStart: () {
+        debugPrint('Countdown Started');
+      },
+      onComplete: () {
+        isButtonActive = true;
+        debugPrint('Countdown Ended');
+      },
+      onChange: (String timeStamp) {
+        debugPrint('Countdown Changed $timeStamp');
+      },
+    );
   }
 }
