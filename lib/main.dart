@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    print('kullanici uygulamaya giriş yaptı $kullanicisaati');
+    debugPrint('kullanici uygulamaya giriş yaptı $kullanicisaati');
     return const HomePage();
   }
 }

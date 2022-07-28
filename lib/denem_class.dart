@@ -15,12 +15,13 @@ import 'package:flutter/material.dart';
 // }
 
 class ZamanlayiciHesaplama with ChangeNotifier {
-  void ZamanlayiciHesabi(int hesapSonucu) async {
+  int butonaBastigindakiSaat = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+  void zamanlayiciHesabi(int hesapSonucu) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int butonaBastigindakiSaat = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     hesapSonucu = butonaBastigindakiSaat - gerisayac2;
     await prefs.setInt('sonuc', hesapSonucu);
     notifyListeners();
-    print('Kullanicinin tıkladığı şu anki zaman $hesapSonucu');
+    debugPrint('Kullanicinin tıkladığı şu anki zaman $hesapSonucu');
   }
 }

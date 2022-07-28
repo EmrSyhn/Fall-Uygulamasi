@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fal_app/denem_class.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,11 +13,10 @@ class HomePage extends StatefulWidget {
 }
 
 var gelenYaziIcerigi = "Butona tıklayınız";
-final CountDownController _controller = CountDownController();
-
-int sayac = 43200;
-int sayac2 = 590;
 bool isButtonActive = true;
+final CountDownController controller = CountDownController();
+
+int gerisayac2 = 5;
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -27,13 +28,12 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Sayac(),
-              //ElevatedButton(onPressed: yazGetir, child: const Text('deneme')),
               InkWell(
                 onTap: () {
                   if (isButtonActive) {
                     isButtonActive = false;
-                    //....
                     yazGetir();
+                    gelenData();
                   }
                 },
                 child: Container(
@@ -57,8 +57,8 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   if (isButtonActive) {
                     isButtonActive = false;
-                    //....
                     yazGetir();
+                    gelenData();
                   }
                 },
                 child: Container(
@@ -76,6 +76,22 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  // void getData() async {
+  //   //Provider.of<VeriTutuma>(context, listen: false).girisiTutma();
+  //   // gerisayac2 = await Provider.of<VeriTutuma>(context).ekranSayaci();
+  //   setState(() {
+  //     var kalansaat = Provider.of<VeriTutuma>(context).girisiTutma();
+  //   });
+  // }
+
+  gelenData() {
+//class----
+    int saatcik = Provider.of<ZamanlayiciHesaplama>(context, listen: false)
+        .butonaBastigindakiSaat;
+    debugPrint('classtan gelen saat: $saatcik');
+    //class----
   }
 
   yazGetir() async {
@@ -97,7 +113,8 @@ class _HomePageState extends State<HomePage> {
         },
       );
     });
-    _controller.start();
+
+    controller.start();
   }
 }
 
@@ -108,10 +125,12 @@ class Sayac extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+// loading ekranı getirt buraya
+
     return CircularCountDownTimer(
-      duration: sayac2,
+      duration: gerisayac2,
       initialDuration: 0,
-      controller: _controller,
+      controller: controller,
       width: MediaQuery.of(context).size.width * 0.5,
       height: MediaQuery.of(context).size.height * 0.2,
       ringColor: const Color.fromARGB(255, 58, 25, 123),
