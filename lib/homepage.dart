@@ -1,9 +1,8 @@
 import 'dart:math';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fal_app/denem_class.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,13 +11,25 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-var gelenYaziIcerigi = "Butona tıklayınız";
-bool isButtonActive = true;
-final CountDownController controller = CountDownController();
-
-int gerisayac2 = 5;
-
 class _HomePageState extends State<HomePage> {
+  int _sayacDegeri = 0;
+  String _sayacFal = '';
+  final CountDownController _controller = CountDownController();
+
+  Future<List> localGetUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var baslangic = prefs.getInt("falBaslangic") ?? 0;
+    var bitis = prefs.getInt("falBitis") ?? 0;
+    var yazi = prefs.getString("falYazi") ?? '';
+    int suan = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+    if (bitis < suan) {
+      return [];
+    }
+    var kalan = (bitis - baslangic);
+    return [baslangic, bitis, yazi, kalan];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,39 +38,82 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Sayac(),
-              InkWell(
-                onTap: () {
-                  if (isButtonActive) {
-                    isButtonActive = false;
-                    yazGetir();
-                    gelenData();
-                  }
+              CircularCountDownTimer(
+                duration: _sayacDegeri,
+                initialDuration: _sayacDegeri,
+                controller: _controller,
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height / 4,
+                ringColor: const Color.fromARGB(255, 83, 59, 59),
+                fillColor: Colors.purpleAccent[100]!,
+                fillGradient: null,
+                backgroundColor: Colors.purple[500],
+                strokeWidth: 15.0,
+                strokeCap: StrokeCap.square,
+                textStyle: const TextStyle(
+                  fontSize: 33.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+                textFormat: CountdownTextFormat.HH_MM_SS,
+                isReverse: true,
+                isReverseAnimation: true,
+                autoStart: true,
+                // This Callback will execute when the Countdown Starts.
+                onStart: () async {
+                  // Here, do whatever you want
+                  debugPrint('Countdown Started');
+                  // var listdata = await localGetUserData();
+
+                  // if (listdata.isNotEmpty) {
+                  //   _sayacFal = listdata[2];
+                  //   _controller.restart(duration: listdata[3]);
+                  //   _controller.start();
+                  // }
                 },
-                child: Container(
-                  margin: const EdgeInsets.all(15),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  width: 300,
-                  child: Text(
-                    gelenYaziIcerigi,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
+
+                // This Callback will execute when the Countdown Ends.
+                onComplete: () {
+                  // Here, do whatever you want
+                  debugPrint('Countdown Ended');
+                },
+              ),
+              Container(
+                margin: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                width: 300,
+                child: Text(
+                  _sayacFal,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(
                 height: 10,
               ),
               InkWell(
-                onTap: () {
-                  if (isButtonActive) {
-                    isButtonActive = false;
-                    yazGetir();
-                    gelenData();
-                  }
+                onTap: () async {
+                  // 1 -> firebase bilgi getir
+                  var contentfal = await yazGetir();
+
+                  // 2 -> Kalan zaman Hesapla
+                  var zamanlar = sayacZamanHesapla();
+                  _sayacDegeri = zamanlar[2];
+                  _sayacFal = contentfal ?? '';
+
+                  // 3 -> gerekli işlemi başlat
+                  _controller.restart(duration: _sayacDegeri);
+                  _controller.start();
+
+                  // 4 -> Bu bilgileri local olarak kaydet
+                  await localSaveUserData(
+                      start: zamanlar[0],
+                      end: zamanlar[1],
+                      content: contentfal);
+                  setState(() {});
                 },
                 child: Container(
                   margin: const EdgeInsets.all(15),
@@ -86,78 +140,41 @@ class _HomePageState extends State<HomePage> {
   //   });
   // }
 
-  gelenData() {
-//class----
-    int saatcik = Provider.of<ZamanlayiciHesaplama>(context, listen: false)
-        .butonaBastigindakiSaat;
-    debugPrint('classtan gelen saat: $saatcik');
-    //class----
+  gelenData() async {}
+
+  localSaveUserData(
+      {required int start, required int end, content = ''}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt("falBaslangic", start);
+    prefs.setInt("falBitis", end);
+    prefs.setString("falYazi", content);
   }
 
-  yazGetir() async {
+  List<int> sayacZamanHesapla() {
+    int butonaBastigindakiSaat = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    int butonaBastigindakiSaatBitis =
+        ((DateTime.now().millisecondsSinceEpoch ~/ 1000) + 100);
+
+    var gerisayac2 = butonaBastigindakiSaatBitis - butonaBastigindakiSaat;
+
+    return [butonaBastigindakiSaat, butonaBastigindakiSaatBitis, gerisayac2];
+  }
+
+  Future<String?> yazGetir() async {
     var doc = await FirebaseFirestore.instance
         .collection('Yazılar')
         .orderBy('index', descending: true)
         .limit(1)
         .get();
+
     int maxIndex = doc.docs.first['index'] ?? 0;
 
-    FirebaseFirestore.instance
+    var gelenveri = await FirebaseFirestore.instance
         .collection('Yazılar')
         .doc('${Random().nextInt(maxIndex + 1)}')
-        .get()
-        .then((gelenVeri) {
-      setState(
-        () {
-          gelenYaziIcerigi = gelenVeri.data()?['icerik'];
-        },
-      );
-    });
+        .get();
 
-    controller.start();
-  }
-}
-
-class Sayac extends StatelessWidget {
-  const Sayac({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-// loading ekranı getirt buraya
-
-    return CircularCountDownTimer(
-      duration: gerisayac2,
-      initialDuration: 0,
-      controller: controller,
-      width: MediaQuery.of(context).size.width * 0.5,
-      height: MediaQuery.of(context).size.height * 0.2,
-      ringColor: const Color.fromARGB(255, 58, 25, 123),
-      ringGradient: null,
-      fillColor: Colors.green[100]!,
-      fillGradient: null,
-      backgroundColor: const Color.fromARGB(255, 105, 59, 3),
-      backgroundGradient: null,
-      strokeWidth: 5.0,
-      strokeCap: StrokeCap.round,
-      textStyle: const TextStyle(
-          fontSize: 33.0, color: Colors.white, fontWeight: FontWeight.bold),
-      textFormat: CountdownTextFormat.HH_MM_SS,
-      isReverse: true,
-      isReverseAnimation: true,
-      isTimerTextShown: true,
-      autoStart: false,
-      onStart: () {
-        debugPrint('Countdown Started');
-      },
-      onComplete: () {
-        isButtonActive = true;
-        debugPrint('Countdown Ended');
-      },
-      onChange: (String timeStamp) {
-        debugPrint('Countdown Changed $timeStamp');
-      },
-    );
+    return gelenveri.data()?['icerik'];
+    //controller.start();
   }
 }

@@ -602,7 +602,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
-  - cloud_firestore (3.1.17):
+  - cloud_firestore (3.4.2):
     - Firebase/Firestore (= 9.3.0)
     - firebase_core
     - Flutter
@@ -614,7 +614,7 @@ PODS:
   - Firebase/Firestore (9.3.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 9.3.0)
-  - firebase_auth (3.3.19):
+  - firebase_auth (3.6.1):
     - Firebase/Auth (= 9.3.0)
     - firebase_core
     - Flutter
@@ -652,6 +652,8 @@ PODS:
     - leveldb-library (~> 1.22)
     - nanopb (< 2.30910.0, >= 2.30908.0)
   - Flutter (1.0.0)
+  - flutter_native_splash (0.0.1):
+    - Flutter
   - GoogleDataTransport (9.1.4):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
@@ -744,6 +746,7 @@ DEPENDENCIES:
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - Flutter (from `Flutter`)
+  - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
 
 SPEC REPOS:
@@ -775,15 +778,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   Flutter:
     :path: Flutter
+  flutter_native_splash:
+    :path: ".symlinks/plugins/flutter_native_splash/ios"
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
-  cloud_firestore: 1fc7440eac047868f29954e54c7e1f396b20abf9
+  cloud_firestore: d08fbf2613a90b9150619ff371a2053e89f97bbe
   Firebase: ef75abb1cdbc746d5a38f4e26c422c807b189b8c
-  firebase_auth: 075c9692184f0122b72006a8dcd181bf8977db88
+  firebase_auth: e83a8e15aeac85f05ca17c241cff4bd20e5d8c17
   firebase_core: 96214f90497b808a2cf2a24517084c5f6de37b53
   FirebaseAuth: 9ebc3577fe0acf9092df21ac314024b70aebf21e
   FirebaseCore: c088995ece701a021a48a1348ea0174877de2a6a
@@ -791,6 +796,7 @@ SPEC CHECKSUMS:
   FirebaseCoreInternal: 635d1c9a612a6502b6377a0c92af83758076ffff
   FirebaseFirestore: 5a72aa925528f67469b16a54a6cfc369467197e4
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
